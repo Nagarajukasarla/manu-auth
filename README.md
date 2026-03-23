@@ -99,32 +99,14 @@ openssl rsa -in private_pkcs8.pem -pubout -out public.pem
 
 ### 1. Security Flow
 
-```
-Security Filter Chain
-    ↓ (1. Disabling CSRF, 2. Allowing requests with matchers, 3. Stateless session)
-UserDetailsService
-    ↓ (Responsible for loading user entity instead of relying on Spring Security user)
-UserPrincipal
-    ↓ (Spring Security works with UserDetails not our custom User (DB). 
-        So this is responsible for linking [User (DB Entity) → UserPrincipal (Security Adapter)])
-```
+![Security Flow](img/Security-flow.png)
 
 **Why not `public class User implements UserDetails {}`?**
 This approach creates tight coupling between your database entity and Spring Security, making it difficult to change security implementations without affecting your domain model. Using `public class UserPrincipal implements UserDetails {}` provides a clean separation of concerns.
 
 ### 2. Auth Service Flow
 
-```
-Controller
-    ↓ (PostMapping, RequestMapping, ResponseEntity)
-Service Layer
-    ↓ (Abstract methods: login and signup)
-Repository (JPA)
-    ↓ (Abstract method: findByUsername)
-Model (User)
-    ↓ (Database: id, email, name, password, createdAt)
-Database
-```
+![Authentication Flow](img/Authentication-flow.png)
 
 ## Key Management
 
