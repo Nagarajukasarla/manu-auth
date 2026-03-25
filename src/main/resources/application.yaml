@@ -1,6 +1,18 @@
+server:
+  port: 8081
+
 spring:
   application:
-    name: auth
+    name: auth-service
 
   profiles:
     active: dev
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
