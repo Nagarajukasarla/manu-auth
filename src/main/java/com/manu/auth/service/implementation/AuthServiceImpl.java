@@ -4,6 +4,8 @@ import com.manu.auth.dto.request.LoginRequest;
 import com.manu.auth.dto.request.SignupRequest;
 import com.manu.auth.dto.response.AuthResponse;
 import com.manu.auth.enums.ROLE;
+import com.manu.auth.event.UserCreatedEvent;
+import com.manu.auth.kafka.EventProducer;
 import com.manu.auth.model.User;
 import com.manu.auth.model.UserPrincipal;
 import com.manu.auth.repository.UserRepository;
@@ -17,6 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,21 +32,35 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EventProducer eventProducer;
 
     @Override
     public ResponseEntity<AuthResponse> signup(SignupRequest request) {
         var user = User.builder()
-                        .username(request.getEmail())
-                        .password(passwordEncoder.encode(request.getPassword()))
-                        .roles(List.of(ROLE.USER))
-                        .build();
+                .name(request.getName())
+                .username(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(List.of(ROLE.USER))
+                .build();
 
         var response = userRepository.save(user);
 
         if (response.getId() != null) {
+
+            // Publish Event to other services
+            var userCreatedEvent = UserCreatedEvent.builder()
+                    .userId(response.getId())
+                    .name(response.getName())
+                    .email(response.getUsername())
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            eventProducer.publishUserCreatedEvent(userCreatedEvent);
+
             return ResponseEntity.ok(AuthResponse.builder()
-                            .token(jwtService.generateToken(user))
-                            .build());
+                    .token(jwtService.generateToken(user))
+                    .build());
+
         }
         return ResponseEntity.badRequest().body(null);
     }
