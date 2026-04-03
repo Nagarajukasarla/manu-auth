@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class UserCreatedEvent {
-    private Long userId;
+    private String userId;
     private String email;
     private String name;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }

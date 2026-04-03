@@ -16,7 +16,8 @@ public class EventProducer {
 
     public void publishUserCreatedEvent(UserCreatedEvent event) {
         try {
-            kafkaTemplate.send(TOPIC, event.getUserId().toString(), event);
+            kafkaTemplate.send(TOPIC, event.getUserId(), event);
+            log.info("Event Published successfully \"{}\"", event);
         }
         catch (Exception e) {
             log.error("Exception occurred: KAFKA: {}", e.getMessage());

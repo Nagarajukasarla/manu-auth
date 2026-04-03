@@ -49,10 +49,10 @@ public class AuthServiceImpl implements AuthService {
 
             // Publish Event to other services
             var userCreatedEvent = UserCreatedEvent.builder()
-                    .userId(response.getId())
+                    .userId(response.getId().toString())
                     .name(response.getName())
                     .email(response.getUsername())
-                    .createdAt(LocalDateTime.now())
+//                    .createdAt(LocalDateTime.now())
                     .build();
 
             eventProducer.publishUserCreatedEvent(userCreatedEvent);
