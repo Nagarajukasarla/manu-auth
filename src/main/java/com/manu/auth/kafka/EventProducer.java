@@ -1,6 +1,6 @@
 package com.manu.auth.kafka;
 
-import com.manu.auth.event.UserCreatedEvent;
+import com.manu.common.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,7 +16,7 @@ public class EventProducer {
 
     public void publishUserCreatedEvent(UserCreatedEvent event) {
         try {
-            kafkaTemplate.send(TOPIC, event.getUserId(), event);
+            kafkaTemplate.send(TOPIC, event.userId(), event);
             log.info("Event Published successfully \"{}\"", event);
         }
         catch (Exception e) {

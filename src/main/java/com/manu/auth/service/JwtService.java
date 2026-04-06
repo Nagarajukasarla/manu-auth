@@ -32,7 +32,7 @@ public class JwtService {
 
     private Map<String, Object> prepareClaims(User user) {
         return Map.of(
-                "user", user.getUsername(),
+                "username", user.getUsername(),
                 "roles", user.getRoles()
                         .stream()
                         .map(ROLE::getName)

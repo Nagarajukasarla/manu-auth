@@ -4,13 +4,14 @@ import com.manu.auth.dto.request.LoginRequest;
 import com.manu.auth.dto.request.SignupRequest;
 import com.manu.auth.dto.response.AuthResponse;
 import com.manu.auth.enums.ROLE;
-import com.manu.auth.event.UserCreatedEvent;
 import com.manu.auth.kafka.EventProducer;
 import com.manu.auth.model.User;
 import com.manu.auth.model.UserPrincipal;
 import com.manu.auth.repository.UserRepository;
 import com.manu.auth.service.AuthService;
 import com.manu.auth.service.JwtService;
+import com.manu.common.event.UserCreatedEvent;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,9 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
